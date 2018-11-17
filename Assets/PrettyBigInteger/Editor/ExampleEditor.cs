@@ -6,17 +6,28 @@ using UnityEditor;
 [CustomEditor(typeof(Example))]
 public class ExampleEditor : Editor {
 
-	long inputValue = 0;
+	string inputValue;
+
+	int numberOfLoops;
 
 	public override void OnInspectorGUI()
 	{
 		Example script = (Example)target;
 
-		inputValue = EditorGUILayout.LongField("INPUT TEST VALUE HERE", inputValue);
+		inputValue = EditorGUILayout.TextField("INPUT TEST VALUE HERE", inputValue);
+
 
 		if (GUILayout.Button("Convert to Strings")) {
 			script.updateExample(inputValue);
 		}
+
+		numberOfLoops = EditorGUILayout.IntField("Number of Loops", numberOfLoops);
+
+		if (GUILayout.Button("PBI Benchmark"))
+		{
+			script.BenchmarkPBI(numberOfLoops, inputValue);
+		}
+
 		base.OnInspectorGUI();
 	}
 }
