@@ -8,6 +8,8 @@ public class ExampleEditor : Editor {
 
 	string inputValue;
 
+	int numberOfTestDigits;
+
 	int numberOfLoops;
 
 	public override void OnInspectorGUI()
@@ -21,11 +23,18 @@ public class ExampleEditor : Editor {
 			script.updateExample(inputValue);
 		}
 
-		numberOfLoops = EditorGUILayout.IntField("Number of Loops", numberOfLoops);
+		numberOfLoops = EditorGUILayout.IntField("Number of Loops", numberOfLoops);		
 
 		if (GUILayout.Button("PBI Benchmark"))
 		{
 			script.BenchmarkPBI(numberOfLoops, inputValue);
+		}
+
+		numberOfTestDigits = EditorGUILayout.IntField("Number of Test Digits", numberOfTestDigits);
+
+		if (GUILayout.Button("Pretty Digits Test"))
+		{
+			script.PrettyTest(numberOfTestDigits);
 		}
 
 		base.OnInspectorGUI();

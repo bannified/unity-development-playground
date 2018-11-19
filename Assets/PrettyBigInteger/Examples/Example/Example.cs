@@ -21,6 +21,16 @@ public class Example : MonoBehaviour {
 		Debug.Log("Data length = " + prettyBig.dataLength);
 	}
 
+	public void PrettyTest(int numOfDigits)
+	{
+		string workingNumber = "";
+		for (int i = 0; i < numOfDigits; i++)
+		{
+			workingNumber += "1";
+			Bannified.PrettyBigInteger prettyBig = new Bannified.PrettyBigInteger(workingNumber);
+			Debug.Log(i + 1 + " digits\n" + workingNumber + " -----> " + prettyBig.ToPrettyString());
+		}
+	}
 
 	public void BenchmarkPBI(int noOfLoops, string testString)
 	{
