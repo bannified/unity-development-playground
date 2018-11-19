@@ -1,24 +1,63 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Example : MonoBehaviour {
-	
-	public Bannified.PrettyBigInteger prettyBigNumber;
 
 	public string normalString;
 
 	public string outputPrettyString;
 
+	[SerializeField]
+	Text normalText;
+	[SerializeField]
+	Text prettyText;
+
+	public int start;
+	public float scalingRate;
+
+	Coroutine _countingCR;
+
+	public void ToggleVisualization()
+	{
+		if (_countingCR == null)
+		{
+			_countingCR = StartCoroutine(countingCR(start));
+		} else
+		{
+			StopCoroutine(_countingCR);
+			_countingCR = null;
+		}
+	}
+
+	IEnumerator countingCR(int start)
+	{
+		BigInteger bi = new BigInteger(start);
+
+		while (true)
+		{			
+			if (bi / new BigInteger(12) > 0)
+			{
+				bi += bi / new BigInteger(12);
+			} else
+			{
+				bi += bi;
+			}
+			normalText.text = bi.ToString();
+			prettyText.text = bi.ToPrettyString();
+			yield return new WaitForSeconds(0.1f);
+		}
+
+	}
+
 	public void updateExample(string inputNumber) {
 		BigInteger big = new BigInteger(inputNumber, 10);
 		normalString = big.ToString();
 
-		Bannified.PrettyBigInteger prettyBig = new Bannified.PrettyBigInteger(inputNumber);
-		prettyBigNumber = prettyBig;
-		outputPrettyString = prettyBig.ToString();
+		outputPrettyString = big.ToPrettyString();
 
-		Debug.Log("Data length = " + prettyBig.dataLength);
+		Debug.Log("Data length = " + big.dataLength);
 	}
 
 	public void PrettyTest(int numOfDigits)
@@ -27,7 +66,7 @@ public class Example : MonoBehaviour {
 		for (int i = 0; i < numOfDigits; i++)
 		{
 			workingNumber += "1";
-			Bannified.PrettyBigInteger prettyBig = new Bannified.PrettyBigInteger(workingNumber);
+			BigInteger prettyBig = new BigInteger(workingNumber);
 			Debug.Log(i + 1 + " digits\n" + workingNumber + " -----> " + prettyBig.ToPrettyString());
 		}
 	}
