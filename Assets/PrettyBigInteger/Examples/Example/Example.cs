@@ -15,7 +15,7 @@ namespace Glazed
 		[SerializeField]
 		Text prettyText;
 
-		public int start;
+		public int startingValue;
 		public float scalingRate;
 
 		Coroutine _countingCR;
@@ -24,7 +24,7 @@ namespace Glazed
 		{
 			if (_countingCR == null)
 			{
-				_countingCR = StartCoroutine(countingCR(start));
+				_countingCR = StartCoroutine(countingCR(startingValue));
 			}
 			else
 			{
@@ -84,7 +84,7 @@ namespace Glazed
 				System.DateTime time = System.DateTime.Now;
 				for (int i = 0; i < noOfLoops; i++)
 				{
-					new Bannified.PrettyBigInteger();
+					new BigInteger();
 				}
 				Debug.Log("Time taken: " + (System.DateTime.Now - time));
 				Debug.Log("End of PrettyBigInteger Benchmark");
@@ -94,7 +94,7 @@ namespace Glazed
 				System.DateTime time = System.DateTime.Now;
 				for (int i = 0; i < noOfLoops; i++)
 				{
-					new Bannified.PrettyBigInteger(testString);
+					new BigInteger(testString);
 				}
 				Debug.Log("Time taken: " + (System.DateTime.Now - time));
 				Debug.Log("End of PrettyBigInteger Benchmark");
