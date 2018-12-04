@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-namespace Glazed
+namespace Bannified
 {
 	[CustomEditor(typeof(Example))]
 	public class ExampleEditor : Editor
