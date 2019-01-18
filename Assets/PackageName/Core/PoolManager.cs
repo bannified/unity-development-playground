@@ -1,129 +1,143 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class PoolManager : MonoBehaviour {
+namespace Glazed.Optimization
+{
+	public class PoolManager : MonoBehaviour
+	{
 
-    Dictionary<int, Queue<PoolObject>> poolDictionary = new Dictionary<int, Queue<PoolObject>>();
+		Dictionary<int, Queue<PoolObject>> poolDictionary = new Dictionary<int, Queue<PoolObject>>();
 
-    static PoolManager _instance;
+		static PoolManager _instance;
 
-    public static PoolManager instance
-    {
-        get
-        {
-            if (_instance == null)
-                _instance = FindObjectOfType<PoolManager>();
-            return _instance;
-        }
-    }
+		public static PoolManager instance
+		{
+			get
+			{
+				if (_instance == null)
+					_instance = FindObjectOfType<PoolManager>();
+				return _instance;
+			}
+		}
 
-    private void Awake()
-    {
-        if (_instance == null)
-        {
-            _instance = this;
-        }
-        else
-        {
-            if (_instance != this)
-                Destroy(gameObject);
-            else
-                DontDestroyOnLoad(gameObject);
-        }
-    }
+		private void Awake()
+		{
+			if (_instance == null)
+			{
+				_instance = this;
+			}
+			else
+			{
+				if (_instance != this)
+					Destroy(gameObject);
+				else
+					DontDestroyOnLoad(gameObject);
+			}
+		}
 
-    [SerializeField]
-    int defaultPoolSize = 20;
+		[SerializeField]
+		int defaultPoolSize = 20;
 
-    /// <summary>
-	/// Creates an object pool with the default pool size (can be changed in PoolManager).
-	/// </summary>
-	/// <param name="prefab">Prefab of object to pool.</param>
-    public void CreatePool(GameObject prefab) {
-        CreatePool(prefab, defaultPoolSize);
-    }
+		/// <summary>
+		/// Creates an object pool with the default pool size (can be changed in PoolManager).
+		/// </summary>
+		/// <param name="prefab">Prefab of object to pool.</param>
+		public void CreatePool(GameObject prefab)
+		{
+			CreatePool(prefab, defaultPoolSize);
+		}
 
-	/// <summary>
-	/// Creates an object pool.
-	/// </summary>
-	/// <param name="prefab">Prefab of object to pool.</param>
-	/// <param name="poolSize">Number of objects in the pool.</param>
-	public void CreatePool(GameObject prefab, int poolSize) {
-        int poolKey = prefab.GetInstanceID();       
+		/// <summary>
+		/// Creates an object pool.
+		/// </summary>
+		/// <param name="prefab">Prefab of object to pool.</param>
+		/// <param name="poolSize">Number of objects in the pool.</param>
+		public void CreatePool(GameObject prefab, int poolSize)
+		{
+			int poolKey = prefab.GetInstanceID();
 
-        if (!poolDictionary.ContainsKey(poolKey)) {
-            GameObject poolHolder = new GameObject(prefab.name + "pool");
-            poolHolder.transform.parent = this.transform;
-            Queue<PoolObject> queue = new Queue<PoolObject>();
+			if (!poolDictionary.ContainsKey(poolKey))
+			{
+				GameObject poolHolder = new GameObject(prefab.name + "pool");
+				poolHolder.transform.parent = this.transform;
+				Queue<PoolObject> queue = new Queue<PoolObject>();
 
-            for (int i = 0; i < poolSize; i++) {
-                GameObject obj = Instantiate(prefab);
-                PoolObject po = new PoolObject(obj);
-                queue.Enqueue(po);
-                po.SetParent(poolHolder.transform);
-            }
-            poolDictionary.Add(poolKey, queue);
-        }
+				for (int i = 0; i < poolSize; i++)
+				{
+					GameObject obj = Instantiate(prefab);
+					PoolObject po = new PoolObject(obj);
+					queue.Enqueue(po);
+					po.SetParent(poolHolder.transform);
+				}
+				poolDictionary.Add(poolKey, queue);
+			}
 
-    }
+		}
 
-	/// <summary>
-	/// Reuses a prefab GameObject, placing it at <code>position</code>, 
-	/// with an orientation of <code>rotation</code>.
-	/// </summary>
-	/// <param name="prefab"></param>
-	/// <param name="position"></param>
-	/// <param name="rotation"></param>
-	/// <returns></returns>
-    public GameObject ReuseObject(GameObject prefab, Vector3 position, Quaternion rotation) {
-        int poolKey = prefab.GetInstanceID();
+		/// <summary>
+		/// Reuses a prefab GameObject, placing it at <code>position</code>, 
+		/// with an orientation of <code>rotation</code>.
+		/// </summary>
+		/// <param name="prefab"></param>
+		/// <param name="position"></param>
+		/// <param name="rotation"></param>
+		/// <returns></returns>
+		public GameObject ReuseObject(GameObject prefab, Vector3 position, Quaternion rotation)
+		{
+			int poolKey = prefab.GetInstanceID();
 
-        if (poolDictionary.ContainsKey(poolKey)){
-            PoolObject target = poolDictionary[poolKey].Dequeue();
-            poolDictionary[poolKey].Enqueue(target);
+			if (poolDictionary.ContainsKey(poolKey))
+			{
+				PoolObject target = poolDictionary[poolKey].Dequeue();
+				poolDictionary[poolKey].Enqueue(target);
 
-            return target.Reuse(position, rotation);
-        } else
-        {
-            Debug.Log(string.Format("Prefab {0} does not have a pool. Remember to create one first!", prefab.name));
-            return null;
-        }
-    }
+				return target.Reuse(position, rotation);
+			}
+			else
+			{
+				Debug.Log(string.Format("Prefab {0} does not have a pool. Remember to create one first!", prefab.name));
+				return null;
+			}
+		}
 
-    class PoolObject
-    {
-        GameObject gameObject;
-        Transform transform;
+		class PoolObject
+		{
+			GameObject gameObject;
+			Transform transform;
 
-        // an array of IPoolables generated by the constructor, allows for
-        // efficient access to components that require 'resetting' when reused
-        IPoolableComponent[] poolableComponents;
+			// an array of IPoolables generated by the constructor, allows for
+			// efficient access to components that require 'resetting' when reused
+			IPoolableComponent[] poolableComponents;
 
 
-        public PoolObject(GameObject instance)
-        {
-            this.gameObject = instance;
-            this.transform = gameObject.transform;
-            gameObject.SetActive(false);
+			public PoolObject(GameObject instance)
+			{
+				this.gameObject = instance;
+				this.transform = gameObject.transform;
+				gameObject.SetActive(false);
 
-            poolableComponents = gameObject.GetComponents<IPoolableComponent>();
-        }
+				poolableComponents = gameObject.GetComponents<IPoolableComponent>();
+			}
 
-        public GameObject Reuse(Vector3 position, Quaternion rotation, bool active = false) {
-            transform.position = position;
-            transform.rotation = rotation;
+			public GameObject Reuse(Vector3 position, Quaternion rotation, bool active = false)
+			{
+				transform.position = position;
+				transform.rotation = rotation;
 
-            foreach (IPoolableComponent pool in poolableComponents){
-                pool.OnReuse();
-            }
+				foreach (IPoolableComponent pool in poolableComponents)
+				{
+					pool.OnReuse();
+				}
 
-            gameObject.SetActive(active); 
-            return gameObject;
-        }
+				gameObject.SetActive(active);
+				return gameObject;
+			}
 
-        public void SetParent(Transform parent){
-            transform.parent = parent;
-        }
-    }
+			public void SetParent(Transform parent)
+			{
+				transform.parent = parent;
+			}
+		}
 
+	}
 }
