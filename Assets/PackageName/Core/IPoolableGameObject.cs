@@ -10,13 +10,13 @@
 		/// Called when the GameObject is reused.
 		/// Used to reset the GameObject to its default values.
 		/// </summary>
-		void OnReuse();
+		void OnReuse(UnityEngine.GameObject gameObject);
 
 		/// <summary>
 		/// Called when the GameObject is reused.
 		/// Used to reset the GameObject to its specific values.
 		/// </summary>
-		void OnReuseWithArguments(params object[] list);
+		void OnReuseWithArguments(UnityEngine.GameObject gameObject, params object[] list);
 
 	}
 }
