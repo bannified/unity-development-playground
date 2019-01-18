@@ -4,12 +4,12 @@ namespace Glazed.Example
 {
 	public class Projectile : MonoBehaviour, Optimization.IPoolableGameObject
 	{
-		public void OnReuse()
+		public void OnReuse(GameObject gameObject)
 		{
 
 		}
 
-		public void OnReuseWithArguments(params object[] list)
+		public void OnReuseWithArguments(GameObject gameObject, params object[] list)
 		{
 
 		}
