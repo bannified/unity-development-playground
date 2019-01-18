@@ -5,6 +5,6 @@
 	/// </summary>
 	public interface IPoolableComponent
 	{
-		void OnReuse();
+		void OnReuse(UnityEngine.GameObject gameObject);
 	}
 }

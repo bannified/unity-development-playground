@@ -126,7 +126,7 @@ namespace Glazed.Optimization
 
 				foreach (IPoolableComponent pool in poolableComponents)
 				{
-					pool.OnReuse();
+					pool.OnReuse(gameObject);
 				}
 
 				gameObject.SetActive(active);
