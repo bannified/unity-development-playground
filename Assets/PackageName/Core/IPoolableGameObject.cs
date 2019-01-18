@@ -1,10 +1,18 @@
-﻿// An interface a poolable GameObject
+﻿/// <summary>
+/// Interface for a PoolableGameObject.
+/// </summary>
 public interface IPoolableGameObject {
 
-    // This method has to be defined in a component that
-    // has properties that require resetting upon reuse
-    void OnReuse();
+	/// <summary>
+	/// Called when the GameObject is reused.
+	/// Used to reset the GameObject to its default values.
+	/// </summary>
+	void OnReuse();
 
-    void OnReuseWithArguments(params object[] list);
+	/// <summary>
+	/// Called when the GameObject is reused.
+	/// Used to reset the GameObject to its specific values.
+	/// </summary>
+	void OnReuseWithArguments(params object[] list);
 
 }

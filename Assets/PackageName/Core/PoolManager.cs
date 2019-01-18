@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PoolManager : MonoBehaviour {
@@ -36,12 +35,20 @@ public class PoolManager : MonoBehaviour {
     [SerializeField]
     int defaultPoolSize = 20;
 
-    // overloaded CreatePool method that creates a pool of prefabs of size defaultPoolSize
+    /// <summary>
+	/// Creates an object pool with the default pool size (can be changed in PoolManager).
+	/// </summary>
+	/// <param name="prefab">Prefab of object to pool.</param>
     public void CreatePool(GameObject prefab) {
         CreatePool(prefab, defaultPoolSize);
     }
 
-    public void CreatePool(GameObject prefab, int poolSize) {
+	/// <summary>
+	/// Creates an object pool.
+	/// </summary>
+	/// <param name="prefab">Prefab of object to pool.</param>
+	/// <param name="poolSize">Number of objects in the pool.</param>
+	public void CreatePool(GameObject prefab, int poolSize) {
         int poolKey = prefab.GetInstanceID();       
 
         if (!poolDictionary.ContainsKey(poolKey)) {
@@ -60,6 +67,14 @@ public class PoolManager : MonoBehaviour {
 
     }
 
+	/// <summary>
+	/// Reuses a prefab GameObject, placing it at <code>position</code>, 
+	/// with an orientation of <code>rotation</code>.
+	/// </summary>
+	/// <param name="prefab"></param>
+	/// <param name="position"></param>
+	/// <param name="rotation"></param>
+	/// <returns></returns>
     public GameObject ReuseObject(GameObject prefab, Vector3 position, Quaternion rotation) {
         int poolKey = prefab.GetInstanceID();
 
